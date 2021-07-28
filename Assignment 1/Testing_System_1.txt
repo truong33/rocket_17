@@ -1,0 +1,79 @@
+CREATE DATABASE Testing_System_Assignment_1;
+USE Testing_System_Assignment_1;
+CREATE TABLE Department(
+	DepartmentID int primary key not null auto_increment,
+    DepartmentName varchar(20)
+);
+CREATE TABLE `Position`(
+	`PositionID` int not null auto_increment primary key, 
+    `PositionName` varchar(20)
+);
+CREATE TABLE `Account`(
+	AccountID int  not null auto_increment primary key,
+    email varchar(30),
+    username varchar(20),
+    fullname varchar(20),
+    Department_ID int,
+    `PositionID` int,
+    CreateDate date,
+    foreign key(Department_ID)references Department(DepartmentID)
+    
+);
+CREATE TABLE `Group`(	
+	GroupID int not null auto_increment,
+    GroupName varchar(20),
+    CreatorID int,
+    CreateDate date
+);
+CREATE TABLE Groupaccount(
+	GroupID int,
+    AccountID int,
+    JoinDate date);
+CREATE TABLE TypeQuestion(
+	TypeID int auto_increment not null,
+    TypeName varchar(20)
+);
+CREATE TABLE CategoryQuestion(
+	CategoryID int auto_increment not null,
+    CategoryName varchar(30)
+);
+CREATE TABLE Question(
+	QuestionID int auto_increment not null,
+    content varchar(30),
+    CategolyID int,
+    TypeID int,
+    CreatorID int ,
+    CreaterDate date
+    );
+CREATE TABLE Answer(
+	AnswerID int,
+    Content varchar(20),
+    QuestionID int,
+    iscorrect boolean
+);
+CREATE TABLE Exam(
+	ExamID int,
+    `Code` int,
+    Title varchar(30),
+    CategoryID int,
+    Duration time,
+    CreatorID int,
+    CreateDate date
+);
+CREATE TABLE Examquestion(
+	ExamID int ,
+    QuestionID int
+);
+    
+
+    
+
+
+
+    
+
+
+    
+    
+
+    
