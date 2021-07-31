@@ -1,0 +1,179 @@
+DROP DATABASE IF EXISTS Testing_System_Assignment_1;
+CREATE DATABASE Testing_System_Assignment_1;
+USE Testing_System_Assignment_1;
+CREATE TABLE Department(
+	DepartmentID   TINYINT unsigned AUTO_INCREMENT  PRIMARY KEY ,
+    DepartmentName varchar(20)
+);
+
+CREATE TABLE `Position`(
+	PositionID tinyint  UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
+    PositionName enum('dev','test','scrum master','PM')	NOT NULL
+);
+
+CREATE TABLE `Account`(
+	AccountID TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY ,
+    email varchar(30) 	UNIQUE KEY,
+    username char(20) NOT NULL  CHECK(length(),
+    fullname varchar(50) NOT NULL,
+    Department_ID TINYINT UNSIGNED NOT NULL,
+	Position_ID tinyint UNSIGNED NOT NULL,
+    CreateDate DATE ,
+    foreign key(Department_ID)references Department(DepartmentID),
+    FOREIGN KEY(Position_ID)  REFERENCES `Position`(PositionID)
+);
+
+CREATE TABLE `Group`(	
+	GroupID TINYINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    GroupName varchar(20),
+    CreatorID TINYINT UNSIGNED ,
+    CreateDate date,
+    FOREIGN KEY(CreatorID) REFERENCES `Account`(AccountID)
+);
+
+CREATE TABLE Group_account(
+	Group_ID TINYINT UNSIGNED,
+    Account_ID TINYINT UNSIGNED,
+    JoinDate date,
+    PRIMARY KEY(Group_ID,Account_ID),
+    FOREIGN KEY(Group_ID) REFERENCES `Group`(GroupID),
+    FOREIGN KEY(Account_ID) REFERENCES `Account`(AccountID)
+    );
+    
+CREATE TABLE TypeQuestion(
+	TypeID SMALLINT auto_increment not null PRIMARY KEY UNIQUE key,
+    	TypeName varchar(20)
+);
+
+CREATE TABLE CategoryQuestion(
+	CategoryID TINYINT auto_increment PRIMARY KEY,
+        CategoryName varchar(30)
+);
+
+CREATE TABLE Question(
+    QuestionID SMALLINT UNSIGNED auto_increment  PRIMARY KEY,
+    content varchar(30),
+    Categoly_ID TINYINT,
+    Type_ID SMALLINT,
+    CreatorID TINYINT ,
+    CreaterDate date,
+    FOREIGN KEY(Categoly_ID) REFERENCES CategoryQuestion(CategoryID),
+    FOREIGN KEY(Type_ID) REFERENCES TypeQuestion(TypeID)
+    );
+    
+CREATE TABLE Answer(
+	AnswerID SMALLINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    Content varchar(20),
+	Question_ID SMALLINT UNSIGNED,
+    iscorrect enum('dung','sai'),
+    FOREIGN KEY (Question_ID) REFERENCES Question(QuestionID)
+    
+);
+
+CREATE TABLE Exam(
+	ExamID TINYINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+	`Code` char(10),
+    Title varchar(30),
+    Category_ID TINYINT,
+    Duration time,
+    CreatorID TINYINT,
+    CreateDate date,
+    FOREIGN KEY(Category_ID) REFERENCES CategoryQuestion(CategoryID)
+);
+
+CREATE TABLE Examquestion(
+	Exam_ID TINYINT UNSIGNED,
+    Question_ID SMALLINT UNSIGNED,
+    PRIMARY KEY(Exam_ID,Question_ID),
+    FOREIGN KEY(Exam_ID) REFERENCES Exam(ExamID),
+	FOREIGN KEY(Question_ID) REFERENCES Question(QuestionID)
+);
+
+INSERT INTO Department (DepartmentID,DepartmentName)
+VALUES			   		(1,'SALES'),
+						(2,'Marketing'),
+					   (3,'audit'),
+                       (4,'human resources'),
+                       (5,'customer service');
+                       
+INSERT INTO `Position`(PositionName)
+VALUES				  ('Dev'),
+					  ('Test'),
+                      ('scrum master'),
+                      ('PM');
+                      
+INSERT INTO `Account`(email,username,fullname,Department_ID,Position_ID,CreateDate)
+VALUES				 ('truclinh@gmail.com','linh','truclinh','1','1','2021/8/30'),
+					 ('hoangnam@gmail.com','nam','hoangnam','4','4','2021/8/31'),
+                     ('thuhuong@gmail.com','huong','thuhuong','2','2','2021/9/1'),
+                     ('duynien@gmail.com','nien','duynien','3','3','2021/9/2'),
+                     ('vantoan@gmail.com','toan','vantoan','5','1','2021/9/3');
+                     
+INSERT INTO `Group`(GroupName,CreatorID,CreateDate)
+VALUES			  ('rocket_15','1','2021-09-08'),
+			       ('rocket_16','2','2021-10-10'),
+				  ('rocket_17','3','2021-10-21'),
+                   	  ('rocket_18','4','2021-11-21'),
+				  ('rocket_19','5','2021-11-22');
+
+INSERT INTO Group_account(Group_ID,Account_ID,JoinDate)
+VALUES					('1','1','2022-1-1'),
+					     ('2','2','2022-1-2'),
+                         		('3','3','2022-1-3'),
+                        		('4','2','2022-1-4'),
+                        		('5','1','2022-1-5');
+                         
+INSERT INTO TypeQuestion(TypeName)
+VALUES				    	('essay'),
+						('Yes or No question'),
+						('Multiple-Choice'),
+                        		('wh-question'),
+                       		('tag-question');
+                        
+INSERT INTO CategoryQuestion(CategoryName)
+VALUES   				  ('JAVA'),
+					  ('SQL'),
+                            ('Postmen'),
+                            ('ryby'),
+                            ('PHP');
+                            
+INSERT INTO Question(content,Categoly_ID,Type_ID,CreatorID,CreaterDate)
+VALUES			    ('cau hoi java','1','2','1','2021-03-04'),
+					('cau hoi sql','2','3','2','2021-03-05'),
+                    ('cau hoi postment','3','5','3','2021-04-05'),
+                    ('cau hoi ryby','4','4','4','2021-05-06'),
+                    ('cau hoi PHP','5','1','5','2021-05-07');
+                    
+INSERT INTO Answer(Content,Question_ID,iscorrect)
+VALUES			  ('cau hoi 1','1','dung'),
+			      ('cau hoi 2','2','sai'),
+                  ('cau hoi 3','3','dung'),
+                  ('cau hoi 4','4','dung'),
+                  ('php la ngon ngu lap trinh web','5','dung');
+                  
+INSERT INTO Exam(`Code`,Title,Category_ID,Duration,CreatorID,CreateDate)
+VALUES          ('101','HSG','1','08:00:00','1','2020-05-03'),
+			('102','ket thuc hoc  phan','2','09:00:00','2','2020-05-04'),
+                ('103','kiem tra dieu kien','3','10:00:00','3','2020-05-05'),
+                ('104','thi','4','11:00:00','4','2020-05-06'),
+                ('105','thi lai','5','12:00:00','5','2020-05-07');
+                
+INSERT INTO Examquestion(Exam_ID,Question_ID)
+VALUES                  ('1','1'),
+				   ('2','2'),
+                        ('1','3'),
+                        ('5','5'),
+                        ('4','3');
+				
+						 
+
+
+
+
+    
+
+
+    
+    
+
+    
