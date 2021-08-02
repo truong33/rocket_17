@@ -1,0 +1,49 @@
+-- Question 1: Thêm ít nh?t 10 b?n ghi vào table
+
+INSERT INTO trainee(Full_Name				,Birth_Date		,Gender		,ET_IQ	,ET_Gmath   ,ET_English	,Training_Class	,Evaluation_Notes,VTI_Account)
+VALUES			   ('Tr??ng trúc linh'		,'2003/12/29'	,'female'	,'20'	,'20'		,'49'		,'15'			,'h?c t?t'		 ,'10'),
+				   ('lê th? h??ng giang'	,'2003/11/11'	,'female'	,'9'	,'10'		,'25'		,'16'			,'t?p trung'	 ,'11'),
+                   ('V? v?n Anh'			,'2004/09/09'	,'male'		,'15'	,'10'		,'29'		,'17'			,'Ko có'		 ,'12'),
+                   ('Nguy?n Hoàng Nam'		,'1995/08/10'	,'male'		,'19'	,'18'		,'48'		,'15'			,'thông minh'	 ,'13'),
+                   ('Nguy?n quang tr??ng'	,'2000/02/01'	,'male'		,'7'	,'10'		,'28'		,'19'			,'tieps thu t?t' ,'14'),
+                   ('tr?n ??c trung'		,'2000/03/01'	,'unknow'	,'10'	,'20'		,'30'		,'18'			,'ko có'		 ,'15'),
+                   ('cao quý h??ng'			,'1999/02/20'	,'female'	,'20'	,'10'		,'31'		,'21'			,'bình th??ng'	 ,'16'),
+                   ('nguy?n m?nh kiên'		,'2004/10/20'	,'male'		,'20'	,'5'		,'18'		,'15'			,'l??i h?c'		 ,'17'),
+                   ('?ào ph??ng h?i'		,'2005/06/10'	,'female'	,'20'	,'6'		,'19'		,'15'			,'không có'		 ,'18'),
+                   ('phan an h?nh'			,'2004/10/09'	,'female'	,'5'	,'9'		,'37'		,'15'			,'h?c kém '		 ,'19');
+
+-- Question 2: Vi?t l?nh ?? l?y ra t?t c? các th?c t?p sinh ?ã v??t qua bài test ??u vào,nhóm chúng thành các tháng sinh khác nhau.
+
+SELECT 		Birth_Date,Full_Name
+FROM 		trainee
+WHERE 		ET_IQ >= 10
+ORDER BY 	Birth_Date DESC;
+
+-- Question 3: Vi?t l?nh ?? l?y ra th?c t?p sinh có tên dài nh?t, l?y ra các thông tin sau:
+-- tên, tu?i, các thông tin c? b?n (nh? ?ã ???c ??nh ngh?a trong table)
+
+SELECT*
+FROM 		trainee
+WHERE  	length(full_name) = (SELECT max(length(full_name)) FROM trainee);
+
+-- Question 4 Vi?t l?nh ?? l?y ra t?t c? các th?c t?p sinh là ET, 1 ET th?c t?p sinh là
+-- nh?ng ng??i ?ã v??t qua bài test ??u vào và th?a mãn s? ?i?m nh? sau:
+-- ET_IQ + ET_Gmath>=20
+-- ET_IQ>=8
+-- ET_Gmath>=8
+-- ET_English>=18
+
+SELECT *
+FROM 		trainee
+WHERE 	ET_IQ + ET_Gmath >= 20 AND ET_IQ >= 8 AND ET_Gmath >= 8 AND ET_English >= 18;
+
+-- Question 5: xóa th?c t?p sinh có TraineeID = 3
+DELETE
+FROM 		trainee
+WHERE 		TraineeID ='3';
+
+-- 	Question 6:Th?c t?p sinh có TraineeID = 5 ???c chuy?n sang l?p "15". Hãy c?p nh?t
+-- thông tin vào database
+UPDATE 	trainee
+SET 		Training_Class ='15'
+WHERE 	TraineeID ='5'

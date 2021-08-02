@@ -1,0 +1,86 @@
+-- Question 2: l?y ra t?t c? các phòng ban
+
+SELECT *
+FROM Department;
+
+-- Question 3: l?y ra id c?a phòng ban "Sale"
+
+SELECT DepartmentID
+FROM Department
+WHERE DepartmentName ='SALES';
+
+-- Question 4: l?y ra thông tin account có full name dài nh?t
+
+SELECT *
+FROM `account`
+WHERE LENGTH(fullname) = (
+SELECT MAX(LENGTH(fullname))
+FROM `account`);
+-- Question 5: L?y ra thông tin account có full name dài nh?t và thu?c phòng ban có id =1
+
+SELECT*
+FROM`Account`
+WHERE length(fullname) = (SELECT MAX(length(fullname)) FROM `account`) AND Department_ID = '1';
+
+-- Question 6: L?y ra tên group ?ã tham gia tr??c ngày 20/12/2019
+
+SELECT*
+FROM `Group`
+WHERE CreateDate <= '2019-12-20';
+
+-- Question 7: L?y ra ID c?a question có >= 4 câu tr? l?i
+
+SELECT 		content,count(Question_ID)
+FROM 			answer
+GROUP BY 		Question_ID
+HAVING 		count(Question_ID)>=4;
+
+-- Question 8: L?y ra các mã ?? thi có th?i gian thi >= 60 phút và ???c t?o tr??c ngày 20/12/2019
+ 
+SELECT  ExamID
+FROM Exam
+WHERE Duration >= 60 AND CreateDate <= '2019-12-20';
+
+-- Question 9: L?y ra 5 group ???c t?o g?n ?ây nh?t
+
+SELECT *
+FROM `group`
+ORDER BY CreateDate DESC
+LIMIT 5;
+
+-- Question 10: ??m s? nhân viên thu?c department có id = 2
+
+SELECT COUNT(AccountID)
+FROM `account`
+where Department_ID = '2';
+
+-- Question 11: L?y ra nhân viên có tên b?t ??u b?ng ch? "D" và k?t thúc b?ng ch? "o"
+
+SELECT *
+FROM `Account`
+WHERE fullname LIKE 'D%g';
+
+
+-- Question 12: Xóa t?t c? các exam ???c t?o tr??c ngày 20/12/2019
+
+DELETE
+FROM exam
+WHERE CreateDate < '2019-12-20';
+
+-- Question 13: Xóa t?t c? các question có n?i dung b?t ??u b?ng t? "câu h?i"
+
+DELETE
+FROM question
+WHERE content ='cau hoi';
+
+-- Question 14: Update thông tin c?a account có id = 5 thành tên "Nguy?n Bá L?c" và  email thành loc.nguyenba@vti.com.vn
+
+UPDATE `Account` 
+SET fullname='Nguy?n bá l?c' , email='loc.nguyenba@gmail.com'
+WHERE AccountID='5';
+
+-- Question 15: update account có id = 5 s? thu?c group có id = 4group
+
+UPDATE `group`
+SET CreatorID ='5'
+WHERE groupID = '4';
