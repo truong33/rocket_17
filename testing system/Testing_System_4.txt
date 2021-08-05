@@ -1,0 +1,138 @@
+-- Testing assignment 3
+-- Question 1: Vi?t l?nh ?? l?y ra danh sách nhân viên và thông tin phòng ban c?a h?
+
+SELECT 	a.fullname, d.DepartmentName
+FROM 		`account` a
+JOIN 		department d ON a.AccountID = d.DepartmentID;
+
+-- Question 2: Vi?t l?nh ?? l?y ra thông tin các account ???c t?o sau ngày 20/12/2010
+
+SELECT *
+FROM 		`account`
+WHERE 	CreateDate < '2010-12-20';
+
+-- question 3: Vi?t l?nh ?? l?y ra t?t c? các developer 
+
+SELECT 	a.fullname,a.email
+FROM		`Account` a
+JOIN		`position` p ON a.position_ID = p.positionID
+WHERE 	p.PositionName= 'dev';
+
+-- Question 4: Vi?t l?nh ?? l?y ra danh sách các phòng ban có >3 nhân viên
+SELECT		d.departmentName,count(d.departmentID) as so_nhan_vien
+FROM			department  d
+JOIN			`account` a ON a.Department_ID = d.DepartmentID
+GROUP BY		d.departmentID
+HAVING		count(d.departmentID) > 3 ;
+-- Question 5: Vi?t l?nh ?? l?y ra danh sách câu h?i ???c s? d?ng trong ?? thi nhi?u nh?t
+
+ SELECT			q.questionID,count(q.questionID) AS cau_hoi_duoc_su_dung_nhieu_nhat
+ FROM			examquestion eq 
+ JOIN			question q	ON eq.Question_ID= q.QuestionID
+ GROUP BY		q.questionID ;
+ 
+-- Question 6: Thông kê m?i category Question ???c s? d?ng trong bao nhiêu Question
+
+ SELECT			cq.CategoryName,count(cq.categoryID)AS so_lan_su_dung
+ FROM			categoryquestion cq
+ JOIN			question	q ON cq.CategoryID = q.Categoly_ID
+ GROUP BY		cq.CategoryID;
+ 
+ -- Question 7: Thông kê m?i Question ???c s? d?ng trong bao nhiêu Exam
+SELECT		  	 q.questionID,q.content,count(eq.question_ID) AS so_lan_su_dung
+FROM			question q
+LEFT JOIN		examquestion eq ON eq.Question_ID=q.QuestionID
+GROUP BY		eq.question_ID;
+
+-- Question 8: L?y ra Question có nhi?u câu tr? l?i nh?t
+
+SELECT			q.content,count(q.questionID) AS so_lan_tra_loi
+FROM			question q
+JOIN			answer a ON a.Question_ID = q.questionID
+GROUP BY		q.questionID;
+ 
+-- Question 9: Th?ng kê s? l??ng account trong m?i group 
+SELECT			g.groupID,g.groupname,count(ga.group_ID)
+FROM			group_account ga
+RIGHT JOIN		`group` g ON g.GroupID = ga.Group_ID -- H?I
+GROUP BY		ga.group_ID;
+	
+-- Question 10: Tìm ch?c v? có ít ng??i nh?t
+
+SELECT			p.positionName,count(p.positionID) AS so_nhan_vien
+FROM			position p
+JOIN			`account` a ON p.PositionID = a.Position_ID
+GROUP BY		p.positionID 
+ORDER BY		count(p.positionID) DESC
+LIMIT 1;
+
+-- Question 11: Th?ng kê m?i phòng ban có bao nhiêu dev, test, scrum master, PM
+
+SELECT		 d.departmentname, p.positionName,count(d.departmentID)  AS so_luong
+FROM		`account` a
+JOIN		 position p ON a.Position_ID = p.PositionID
+JOIN		 department d ON d.DepartmentID = a.Department_ID
+GROUP BY 	 d.departmentID, p.positionID; 
+
+-- Question 12: L?y thông tin chi ti?t c?a câu h?i bao g?m: thông tin c? b?n c?a
+ -- question, lo?i câu h?i, ai là ng??i t?o ra câu h?i, câu tr? l?i là gì, …
+SELECT	 		q.questionId,cq.CategoryName,tq.TypeName,a.fullname,an.iscorrect,q.content,an.content
+FROM			question q
+JOIN			categoryquestion cq ON cq.CategoryID = q.Categoly_ID
+JOIN			typequestion tq	ON q.Type_ID =tq.TypeID
+JOIN			`account`	a  	ON q.CreatorID = a.AccountID
+JOIN			answer an	ON an.Question_ID = q.QuestionID
+WHERE			an.iscorrect ='1';
+-- Question 13: L?y ra s? l??ng câu h?i c?a m?i lo?i t? lu?n hay tr?c nghi?m
+SELECT			tq.typename,count(q.type_ID)
+FROM			question q
+JOIN			typequestion tq ON tq.TypeID = q.Type_ID
+GROUP BY		q.type_ID;
+
+-- Question 14:L?y ra group không có account nào
+
+SELECT 			 g.groupname
+FROM			`group` g
+LEFT JOIN		 group_account ga ON ga.Group_ID = g.groupID
+WHERE			ga.group_ID IS NULL;
+-- 	Question 15:L?y ra account không có group nào
+SELECT			a.fullname,a.accountID
+FROM			`account` a
+LEFT JOIN		group_account	ga ON ga.account_ID = a.accountID
+WHERE			ga.account_ID is null ;
+
+-- Question 16: L?y ra question không có answer nào
+
+SELECT			q.content	
+FROM			question q
+LEFT JOIN		answer an  ON  q.QuestionID = an.Question_ID
+WHERE			an.question_ID IS NULL;
+
+-- l?y ra tên account và tên group c?a nh?ng account ?ã tham gia group
+SELECT 			a.fullname,g.groupname
+FROM				group_account ga
+JOIN				`account`	a  ON ga.Account_ID=a.AccountID
+JOIN				`group`	g	ON 	g.GroupID = ga.Group_ID;
+-- Question 17:
+-- 	L?y các account thu?c nhóm th? 1
+SELECT			a.fullname,ga.group_id
+FROM			`account` a
+JOIN			group_account ga ON ga.Account_ID = a.AccountID
+WHERE 			ga.group_ID='1';
+
+-- L?y các account thu?c nhóm th? 4
+SELECT			a.fullname,ga.group_id
+FROM			`account` a
+JOIN			group_account ga ON ga.Account_ID = a.AccountID
+WHERE 			ga.group_ID='4';
+
+-- Ghép 2 k?t qu? t? câu a) và câu b) sao cho không có record nào trùng nhau
+SELECT			a.fullname,ga.group_id
+FROM			`account` a
+JOIN			group_account ga ON ga.Account_ID = a.AccountID
+WHERE 			ga.group_ID='1'
+UNION
+SELECT			a.fullname,ga.group_id
+FROM			`account` a
+JOIN			group_account ga ON ga.Account_ID = a.AccountID
+WHERE 			ga.group_ID='4';
