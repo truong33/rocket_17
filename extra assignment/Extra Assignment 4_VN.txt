@@ -1,0 +1,90 @@
+DROP DATABASE  IF EXISTS extra4;
+CREATE	DATABASE extra4;
+USE extra4;
+
+CREATE TABLE Department (
+	department_Number			TINYINT UNSIGNED AUTO_INCREMENT  PRIMARY KEY,
+    department_Name				VARCHAR(50) NOT NULL UNIQUE KEY
+    );
+    
+CREATE TABLE Employee (
+	employee_Number				SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    employee_Name				VARCHAR(50) NOT NULL,
+    department_Number 			TINYINT UNSIGNED NOT NULL,
+    FOREIGN KEY (department_Number) REFERENCES Department(department_Number)
+    );
+    
+
+
+CREATE TABLE Employee_Skill (
+	employee_Number				SMALLINT UNSIGNED NOT NULL ,
+    skill_Code					VARCHAR(50) NOT NULL,
+    dateRegistered 				DATE ,
+    PRIMARY KEY (employee_Number, skill_Code),
+    FOREIGN KEY (employee_Number) REFERENCES Employee(employee_Number)
+);
+INSERT INTO department(department_Name)
+VALUES				  		  ('Nhân s?'),
+							  ('hành chính'),
+							  ('k? toán'),
+							  ('b?o v?'),
+							  ('giám ??c'),
+							  ('ch?m sóc khách hàng'),
+							  ('tr? lý giám ??c'),
+							  ('qu?n lý'),
+							  ('nhân viên'),
+							  ('phó giám ??c');
+
+INSERT INTO employee(employee_Name            ,department_Number)
+VALUES								('linh'					  ,'1'			   ),
+									('truong'				  ,'2'			   ),
+									('nam'					  ,'3'			   ),
+									('hoa'					  ,'4'			   ),
+									('long'					  ,'1' 			   ),
+									('giang'				  ,'3'			   ),
+									('trang'				  ,'5'			   ),
+									('linhtrang'			  ,'6'			   ),
+									('hung'					  ,'1'			   ),
+									('loan'					  ,'1'			   );
+INSERT INTO employee_skill(employee_Number			,skill_Code				,dateRegistered				)
+VALUES					  ('1'						,'java'					,'2020-01-02		'		),
+						  ('2'						,'php'					,'2020-01-03'				),
+                          ('3'						,'java'					,'2019-01-05'				),
+                          ('4'						,'web'					,'2018-01-04'				),
+                          ('1'						,'php'					,'2017-01-04'				),
+                          ('5'						,'teamwork'				,'2019-10-10'				),
+                          ('6'						,'PYTHON'				,'2020-10-10'				),
+                          ('3'						,'python'				,'2011-10-10'				),
+                          ('10'						,'C#'					,'2000-10-10'				),
+                          ('10'						,'C++'					,'2010-10-29'				);
+                          
+-- Question 3: Vi?t l?nh ?? l?y ra danh sách nhân viên (name) có skill Java
+ -- H??ng d?n: s? d?ng UNION
+ SELECT 			e.employee_Name,es.skill_Code
+ FROM				employee e
+ JOIN				employee_skill es ON e.employee_Number=es.employee_Number
+ WHERE				es.skill_Code = 'java';
+ 
+ -- Question 4: Vi?t l?nh ?? l?y ra danh sách các phòng ban có >3 nhân viên
+ SELECT			count(e.department_Number),d.department_Name
+ FROM			department d
+ JOIN			employee e ON d.department_Number= e.department_Number
+ GROUP BY	 	e.department_Number
+ HAVING			count(e.department_Number) > 3 ;
+ 
+ -- Question 5: Vi?t l?nh ?? l?y ra danh sách nhân viên c?a m?i v?n phòng ban
+ 
+ SELECT		  	d.department_Name,count(e.department_Number) AS so_luong,GROUP_CONCAT(e.employee_Name)
+ FROM			employee e
+ JOIN			department d ON e.department_Number = d.department_Number
+ GROUP BY		e.department_Number;
+ 
+ -- Question 6: Vi?t l?nh ?? l?y ra danh sách nhân viên có > 1 skills.
+ SELECT			count(e.employee_Number) AS so_lg,e.employee_Name,group_concat(skill_code) 
+ FROM			employee e
+ JOIN			employee_skill sk ON sk.employee_Number = e.employee_Number
+ GROUP BY		e.employee_Number
+ HAVING			count(e.employee_Number) >1
+
+ 
+ 
